@@ -1,37 +1,38 @@
-pipeline{
+pipeline {
     agent any
 
-    stages{
-        stage("Restore dependencies"){
-            steps{
+    stages {
+        stage("Restore dependencies") {
+            steps {
                 bat 'dotnet restore'
             }
-            post{
-                failure{
+            post {
+                failure {
                     echo "Step failed"
                 }
             }
         }
 
-        stage("Build solution"){
-            steps{
+        stage("Build solution") {
+            steps {
                 bat 'dotnet build --no-restore'
             }
         }
-        stage("Run tests) {
-            paralell {
-                stage("Run tests for Project 1"){
-                    steps{
+
+        stage("Run tests") {
+            parallel {
+                stage("Run tests for Project 1") {
+                    steps {
                         bat 'dotnet test TestProject1/TestProject1.csproj --no-build --verbosity normal'
                     }
                 }
-                stage("Run tests for Project 2"){
-                    steps{
+                stage("Run tests for Project 2") {
+                    steps {
                         bat 'dotnet test TestProject2/TestProject2.csproj --no-build --verbosity normal'
                     }
                 }
-                stage("Run tests for Project 3"){
-                    steps{
+                stage("Run tests for Project 3") {
+                    steps {
                         bat 'dotnet test TestProject3/TestProject3.csproj --no-build --verbosity normal'
                     }
                 }
@@ -39,8 +40,8 @@ pipeline{
         }
     }
 
-    post{
-        always{
+    post {
+        always {
             echo "Workflow completed successfully"
         }
     }
